@@ -25,11 +25,11 @@ struct KeychainKeys {
 ///Keychain Items labels used by query builder.
 struct KeychainItemLabels {
     
-    static let encryptionKey = "UsageTracking_Encryption_Key"
+    static let encryptionKey = "Encryption_Key"
     /*If we are adding IVData to output sequence while encrypted. Then we have to maintatin the IVData as well in Keychain.
      Otherwise we will lose the state of the encryption. Which leads to corrupted data.*/
-    static let ivDataKey = "UsageTracking_IVData_key"
-    static let saltLabel = "UsageTracking_Private_Salt"
+    static let ivDataKey = "IVData_key"
+    static let saltLabel = "Private_Salt"
     
     //Get all the labels in this model. This is a aggregator used by Keychian to take action in group.
     static func getAllLabels() -> [String] {
@@ -41,11 +41,11 @@ struct KeychainItemLabels {
 ///Keychain Items tags, which are used by query builder.
 struct KeychainItemTags {
     
-    static let encryptionServiceTag = "com.sap.epm.fpa.UsageTracking.Encryption.Service"
+    static let encryptionServiceTag = "com.vinay.Encryption.Service"
     /*If we want additional security on encryption, then we can add random bytes to ouput sequence. WHich is IVData.
      It is not used in current implementation. Kept it for future needs.*/
-    static let ivDataServiceTag = "com.sap.epm.fpa.UsageTracking.IvData.Service"
-    static let saltServiceTag = "com.sap.epm.fpa.UsageTracking.Salt.Service"
+    static let ivDataServiceTag = "com.vinay.IvData.Service"
+    static let saltServiceTag = "com.vinay.Salt.Service"
     
     //Get all the tags in this model. This is a aggregator used by Keychian to take action in group.
     static func getAllTags() -> [String] {
@@ -110,7 +110,7 @@ protocol KeychainServicesProvidable {
     /// - Returns: throws KeychainError exception if anything goes wrong.
     func remove(with query: QueryDataType) throws
     
-    ///  A Keychain service to remove all elements related to usage tracking from Keychain container.
+    ///  A Keychain service to remove all elements from Keychain container.
     ///  - Parameters:
     ///     - allLabels: array of attribute labels.
     ///     - allTags: array of attribute tags.
@@ -135,9 +135,9 @@ typealias QueryDataType = [String: Any]
 //protocols composition
 typealias KeychainDependencies = KeychainQueryBuildable & KeychainServicesProvidable
 
-final class UsageTrackingKeychainManager: KeychainDependencies {
+final class KeychainManager: KeychainDependencies {
     
-    static let sharedInstance = UsageTrackingKeychainManager()
+    static let sharedInstance = KeychainManager()
     
     ///   A query builder to access elements in Keychain.
     /// - Parameters:
@@ -273,7 +273,7 @@ final class UsageTrackingKeychainManager: KeychainDependencies {
         print("Data removed from keychain with no errors.")
     }
     
-    ///  A Keychain service to remove all elements related to usage tracking from Keychain container.
+    ///  A Keychain service to remove all elements from Keychain container.
     ///  - Parameters:
     ///     - allLabels: array of attribute labels.
     ///     - allTags: array of attribute tags.
@@ -297,7 +297,7 @@ final class UsageTrackingKeychainManager: KeychainDependencies {
                 return false
             }
         }
-        print("All Items with Usage Tracking tags are removed from Keychain.")
+        print("All Items with tags are removed from Keychain.")
         return true
     }
     
