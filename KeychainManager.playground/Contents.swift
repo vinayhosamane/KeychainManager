@@ -64,7 +64,7 @@ enum KeychainError: Error, LocalizedError {
     var localizedDescription: String {
         switch self {
         case .keychainOSError(let status):
-            return KeyChainManager.convertOSStatusError(status)
+            return ErrorMapper.convertOSStatusError(status)
         case .dataValidationError:
             return "Value passed is either nil or not a valid data." //has to be locallized
         }
@@ -301,5 +301,95 @@ final class KeychainManager: KeychainDependencies {
         return true
     }
     
+}
+
+class ErrorMapper {
+    static func convertOSStatusError(_ status: OSStatus) -> String {
+        var errorMessage: String = "Error"
+        switch (status) {
+        case errSecAuthFailed:
+            errorMessage = "Authorization and/or authentication failed."
+            break
+        case errSecNoSuchKeychain:
+            errorMessage = "The keychain does not exist."
+            break
+        case errSecDuplicateKeychain:
+            errorMessage = "A keychain with the same name already exists."
+            break
+        case errSecDuplicateItem:
+            errorMessage = "The item already exists."
+            break
+        case errSecDuplicateCallback:
+            errorMessage = "The callback is not valid."
+            break
+        case errSecInvalidKeychain:
+            errorMessage = "The keychain is not valid."
+            break
+        case errSecInvalidItemRef:
+            errorMessage = "The item reference is invalid."
+            break
+        case errSecInvalidCallback:
+            errorMessage = "The callback is not valid."
+            break
+        case errSecInvalidAuthority:
+            errorMessage = "The authority is not valid."
+            break
+        case errSecInvalidCertAuthority:
+            errorMessage = "The certificate authority is not valid."
+            break
+        case errSecInteractionRequired:
+            errorMessage = "User interaction is required."
+            break
+        case errSecDataNotAvailable:
+            errorMessage = "The data is not available."
+            break
+        case errSecDataNotModifiable:
+            errorMessage = "The data is not modifiable."
+            break
+        case errSecNotAvailable:
+            errorMessage = "No trust results are available."
+            break
+        case errSecNotSigner:
+            errorMessage = "The certificate is not signed by its proposed parent."
+            break
+        case errSecNotTrusted:
+            errorMessage = "The trust policy is not trusted."
+            break
+        case errSecNoDefaultKeychain:
+            errorMessage = "A default keychain does not exist."
+            break
+        case errSecNoDefaultAuthority:
+            errorMessage = "No default authority was detected."
+            break
+        case errSecNoPolicyModule:
+            errorMessage = "There is no policy module available."
+            break
+        case errSecNoTrustSettings:
+            errorMessage = "No trust settings were found."
+            break
+        case errSecCertificateExpired:
+            errorMessage = "An expired certificate was detected."
+            break
+        case errSecCertificateRevoked:
+            errorMessage = "The certificate was revoked."
+            break
+        case errSecCertificateSuspended:
+            errorMessage = "The certificate was suspended."
+            break
+        case errSecCertificateNotValidYet:
+            errorMessage = "The certificate is not yet valid."
+            break
+        case errSecCertificateCannotOperate:
+            errorMessage = "The certificate cannot operate."
+            break
+        case errSecItemNotFound:
+            errorMessage = "The item cannot be found."
+            break
+        default:
+            break
+        }
+        
+        return errorMessage
+    }
 }
 
